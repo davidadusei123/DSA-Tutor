@@ -1,18 +1,18 @@
 """
 RAG Pipeline: Load PDFs, chunk, embed, and store in vector database
 """
-
-import os
 from pathlib import Path
-from typing import List
-
-# Document loading and processing
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.schema import Document
-
+import ollama
+from langchain_community.document_loaders import UnstructuredPDFLoader
+from langchain_community.document_loaders import OnlinePDFLoader
+from langchain_ollama import OllamaEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_ollama import ChatOllama
+from langchain_core.runnables import RunnablePassthrough
+from langchain.retrievers.multi_query import MultiQueryRetriever
 
 class RAGPipeline:
     def __init__(self, data_folder: str, embedding_model: str = "all-MiniLM-L6-v2"):
@@ -23,106 +23,83 @@ class RAGPipeline:
             data_folder: Path to folder containing PDFs
             embedding_model: HuggingFace model for embeddings
         """
-        self.data_folder = Path(data_folder)
+        self.data_folder = data_folder
         self.embedding_model = embedding_model
-        self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
-        self.vector_store = None
         self.documents = []
-        
-    def load_pdfs(self) -> List[Document]:
-        """Load all PDFs from data folder."""
+
+    def load_pdfs(self):
         print(f"Loading PDFs from {self.data_folder}...")
-        
-        pdf_files = list(self.data_folder.glob("*.pdf"))
+        pdf_files = list(Path(self.data_folder).glob("*.pdf"))
         print(f"Found {len(pdf_files)} PDF files")
-        
-        all_documents = []
-        for pdf_file in pdf_files:
-            print(f"  Loading {pdf_file.name}...")
-            loader = PyPDFLoader(str(pdf_file))
-            documents = loader.load()
-            
-            # Add source metadata
-            for doc in documents:
-                doc.metadata["source"] = pdf_file.name
-            
-            all_documents.extend(documents)
-        
-        self.documents = all_documents
+
+        docs = []
+        for file in pdf_files:
+            loader = UnstructuredPDFLoader(file_path=str(file))
+            data = loader.load()
+            print(f"done loading {file}...")
+
+            for doc in data:
+                doc.metadata["source"] = file.name
+            docs.extend(data)
+
+        self.documents = docs
         print(f"Total documents loaded: {len(self.documents)}")
-        return all_documents
-    
-    def chunk_documents(self, chunk_size: int = 500, chunk_overlap: int = 50) -> List[Document]:
-        """
-        Split documents into chunks.
-        
-        Args:
-            chunk_size: Number of characters per chunk
-            chunk_overlap: Overlap between chunks
-        """
-        print(f"\nChunking documents (size={chunk_size}, overlap={chunk_overlap})...")
-        
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=chunk_size,
-            chunk_overlap=chunk_overlap,
-            separators=["\n\n", "\n", " ", ""]
-        )
-        
-        chunks = splitter.split_documents(self.documents)
-        print(f"Total chunks created: {len(chunks)}")
-        
+        return docs
+
+    def chunk_documents(self):
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=300) # each chunk is 1200 chars with 300 char overlap (greater overlap the better becausde it includes context)
+        chunks = text_splitter.split_documents(self.documents)
+        print("Done splitting...")
         self.documents = chunks
         return chunks
     
-    def create_embeddings_and_store(self, vector_db_path: str = "vector_db") -> FAISS:
-        """
-        Create embeddings and store in FAISS vector database.
-        
-        Args:
-            vector_db_path: Path to save vector database
-        """
-        print(f"\nCreating embeddings and storing in vector database...")
-        print(f"This may take a few minutes depending on document size...")
-        
-        # Create FAISS vector store from documents
-        self.vector_store = FAISS.from_documents(
-            self.documents,
-            self.embeddings
-        )
-        
-        # Save to disk
-        self.vector_store.save_local(vector_db_path)
-        print(f"Vector database saved to {vector_db_path}")
-        
-        return self.vector_store
-    
-    def query(self, query_text: str, top_k: int = 3) -> List[tuple]:
-        """
-        Search vector database for similar documents.
-        
-        Args:
-            query_text: Search query
-            top_k: Number of results to return
-            
-        Returns:
-            List of (document, similarity_score) tuples
-        """
-        if self.vector_store is None:
-            raise ValueError("Vector store not initialized. Run create_embeddings_and_store() first.")
-        
-        results = self.vector_store.similarity_search_with_score(query_text, k=top_k)
-        return results
-    
-    def load_existing_vectordb(self, vector_db_path: str = "vector_db") -> FAISS:
-        """Load pre-existing vector database."""
-        print(f"Loading vector database from {vector_db_path}...")
-        self.vector_store = FAISS.load_local(
-            vector_db_path,
-            self.embeddings
-        )
-        print("Vector database loaded successfully")
-        return self.vector_store
+    def create_embeddings_and_store(self):
+        ollama.pull("nomic-embed-text")
 
+        vector_db = Chroma.from_documents(
+            documents=self.documents,
+            embedding=OllamaEmbeddings(model="nomic-embed-text"),
+            collection_name="rag_collection")
+        
+        print("Done adding to vector database...")
+        return vector_db
+    
+    def query_and_retrieve(self, query_text: str, top_k: int = 3, vector_db: Chroma = None):
+        llm = self.embedding_model
+        QueryPrompt = PromptTemplate(
+            input_variables=["query"],
+            template="Given the following query, retrieve the most relevant documents from the vector database: {query}"
+        )
+
+        retriever = MultiQueryRetriever.from_llm(
+            vector_db.as_retriever(), llm, prompt=QueryPrompt
+        )
+
+        # RAG prompt
+        template = """Answer the query based on the following retrieved documents. If you don't know the answer, say you don't know.
+        {context}
+        Query: {query}
+        """
+
+        prompt = ChatPromptTemplate.from_template(template)
+
+        chain = (
+            {"context": retriever, "query": RunnablePassthrough()}
+            | prompt
+            | llm
+            | StrOutputParser()
+        )
+
+        res = chain.invoke(query_text)
+        return res
+
+
+
+
+
+    
+
+    
 
 def main():
     """Example usage of RAG pipeline."""
@@ -133,32 +110,180 @@ def main():
     
     # Step 1: Load PDFs
     pipeline.load_pdfs()
-    
+
     # Step 2: Chunk documents
-    pipeline.chunk_documents(chunk_size=500, chunk_overlap=50)
-    
+    pipeline.chunk_documents()
+
     # Step 3: Create embeddings and store in vector database
-    pipeline.create_embeddings_and_store("vector_db")
-    
-    # Step 4: Query the vector database
-    print("\n" + "="*60)
-    print("Testing RAG Pipeline with sample queries")
-    print("="*60)
-    
-    test_queries = [
-        "What is dynamic programming?",
-        "Explain binary search trees",
-        "How does sorting work?"
-    ]
-    
-    for query in test_queries:
-        print(f"\nQuery: {query}")
-        results = pipeline.query(query, top_k=2)
-        for i, (doc, score) in enumerate(results, 1):
-            print(f"  Result {i} (score: {score:.4f})")
-            print(f"    Source: {doc.metadata.get('source', 'Unknown')}")
-            print(f"    Preview: {doc.page_content[:100]}...")
+    vector_db = pipeline.create_embeddings_and_store()
+
+    # Step 4: Send query and retrieve relevant information
+    pipeline.query_and_retrieve("What is dynamic programming?", top_k=3, vector_db=vector_db)
 
 
 if __name__ == "__main__":
     main()
+
+
+
+
+# import os
+# from pathlib import Path
+# from typing import List
+
+# # Document loading and processing
+# from langchain.document_loaders import PyPDFLoader
+# from langchain.text_splitter import RecursiveCharacterTextSplitter
+# from langchain.embeddings import HuggingFaceEmbeddings
+# from langchain.vectorstores import FAISS
+# from langchain.schema import Document
+
+
+# class RAGPipeline:
+#     def __init__(self, data_folder: str, embedding_model: str = "all-MiniLM-L6-v2"):
+#         """
+#         Initialize RAG pipeline.
+        
+#         Args:
+#             data_folder: Path to folder containing PDFs
+#             embedding_model: HuggingFace model for embeddings
+#         """
+#         self.data_folder = Path(data_folder)
+#         self.embedding_model = embedding_model
+#         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
+#         self.vector_store = None
+#         self.documents = []
+        
+#     def load_pdfs(self) -> List[Document]:
+#         """Load all PDFs from data folder."""
+#         print(f"Loading PDFs from {self.data_folder}...")
+        
+#         pdf_files = list(self.data_folder.glob("*.pdf"))
+#         print(f"Found {len(pdf_files)} PDF files")
+        
+#         all_documents = []
+#         for pdf_file in pdf_files:
+#             print(f"  Loading {pdf_file.name}...")
+#             loader = PyPDFLoader(str(pdf_file))
+#             documents = loader.load()
+            
+#             # Add source metadata
+#             for doc in documents:
+#                 doc.metadata["source"] = pdf_file.name
+            
+#             all_documents.extend(documents)
+        
+#         self.documents = all_documents
+#         print(f"Total documents loaded: {len(self.documents)}")
+#         return all_documents
+    
+#     def chunk_documents(self, chunk_size: int = 500, chunk_overlap: int = 50) -> List[Document]:
+#         """
+#         Split documents into chunks.
+        
+#         Args:
+#             chunk_size: Number of characters per chunk
+#             chunk_overlap: Overlap between chunks
+#         """
+#         print(f"\nChunking documents (size={chunk_size}, overlap={chunk_overlap})...")
+        
+#         splitter = RecursiveCharacterTextSplitter(
+#             chunk_size=chunk_size,
+#             chunk_overlap=chunk_overlap,
+#             separators=["\n\n", "\n", " ", ""]
+#         )
+        
+#         chunks = splitter.split_documents(self.documents)
+#         print(f"Total chunks created: {len(chunks)}")
+        
+#         self.documents = chunks
+#         return chunks
+    
+#     def create_embeddings_and_store(self, vector_db_path: str = "vector_db") -> FAISS:
+#         """
+#         Create embeddings and store in FAISS vector database.
+        
+#         Args:
+#             vector_db_path: Path to save vector database
+#         """
+#         print(f"\nCreating embeddings and storing in vector database...")
+#         print(f"This may take a few minutes depending on document size...")
+        
+#         # Create FAISS vector store from documents
+#         self.vector_store = FAISS.from_documents(
+#             self.documents,
+#             self.embeddings
+#         )
+        
+#         # Save to disk
+#         self.vector_store.save_local(vector_db_path)
+#         print(f"Vector database saved to {vector_db_path}")
+        
+#         return self.vector_store
+    
+#     def query(self, query_text: str, top_k: int = 3) -> List[tuple]:
+#         """
+#         Search vector database for similar documents.
+          
+#         Args:
+#             query_text: Search query
+#             top_k: Number of results to return
+            
+#         Returns:
+#             List of (document, similarity_score) tuples
+#         """
+#         if self.vector_store is None:
+#             raise ValueError("Vector store not initialized. Run create_embeddings_and_store() first.")
+        
+#         results = self.vector_store.similarity_search_with_score(query_text, k=top_k)
+#         return results
+    
+#     def load_existing_vectordb(self, vector_db_path: str = "vector_db") -> FAISS:
+#         """Load pre-existing vector database."""
+#         print(f"Loading vector database from {vector_db_path}...")
+#         self.vector_store = FAISS.load_local(
+#             vector_db_path,
+#             self.embeddings
+#         )
+#         print("Vector database loaded successfully")
+#         return self.vector_store
+
+
+# def main():
+#     """Example usage of RAG pipeline."""
+    
+#     # Initialize pipeline
+#     data_folder = r"C:\Users\ik_ad\DSA-Tutor\DSA-Tutor\Data"
+#     pipeline = RAGPipeline(data_folder)
+    
+#     # Step 1: Load PDFs
+#     pipeline.load_pdfs()
+    
+#     # Step 2: Chunk documents
+#     pipeline.chunk_documents(chunk_size=500, chunk_overlap=50)
+    
+#     # Step 3: Create embeddings and store in vector database
+#     pipeline.create_embeddings_and_store("vector_db")
+    
+#     # Step 4: Query the vector database
+#     print("\n" + "="*60)
+#     print("Testing RAG Pipeline with sample queries")
+#     print("="*60)
+    
+#     test_queries = [
+#         "What is dynamic programming?",
+#         "Explain binary search trees",
+#         "How does sorting work?"
+#     ]
+    
+#     for query in test_queries:
+#         print(f"\nQuery: {query}")
+#         results = pipeline.query(query, top_k=2)
+#         for i, (doc, score) in enumerate(results, 1):
+#             print(f"  Result {i} (score: {score:.4f})")
+#             print(f"    Source: {doc.metadata.get('source', 'Unknown')}")
+#             print(f"    Preview: {doc.page_content[:100]}...")
+
+
+# if __name__ == "__main__":
+#     main()
