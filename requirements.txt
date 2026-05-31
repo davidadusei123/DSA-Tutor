@@ -10,5 +10,6 @@ unstructured
 unstructured[pdf]
 fastembed
 pdfplumber
-sentence-transformers
+sentence-transformers>=2.7.0
+numpy<2
 elevenlabs
