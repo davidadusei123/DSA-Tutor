@@ -1,0 +1,151 @@
+[
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into simple bullet points. Avoid heavy jargon. Explain the purpose and how it helps the student's problem.",
+    "input": {
+      "student_query": "How does binary search work?",
+      "retrieved_context": "Binary search is an algorithm for finding a target value in a sorted array. It repeatedly compares the target to the middle element and eliminates half of the remaining search space. If the target is smaller than the middle element, search the left half; if larger, search the right half. Time complexity is O(log n)."
+    },
+    "output": [
+      "Binary search is used to find a value quickly in a sorted list.",
+      "It checks the middle item first instead of starting from the beginning.",
+      "If the target is smaller, it searches the left half. If larger, it searches the right half.",
+      "Each step cuts the search area in half.",
+      "This is much faster than checking every item one by one."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Give a beginner-friendly summary with enough technical detail to guide coding.",
+    "input": {
+      "student_query": "Why does a stack help with valid parentheses?",
+      "retrieved_context": "A stack follows last-in, first-out behavior, which matches the reverse order in which parentheses must close. For valid parentheses problems, opening brackets are pushed onto the stack. When a closing bracket appears, the algorithm checks whether it matches the most recent opening bracket. If it matches, the opening bracket is removed. If it does not match or the stack is empty, the string is invalid. After processing the string, the stack must be empty for the string to be valid."
+    },
+    "output": [
+      "A stack is useful because parentheses close in reverse order.",
+      "When you see an opening bracket, store it on the stack.",
+      "When you see a closing bracket, compare it with the most recent opening bracket.",
+      "If they do not match, the string is not valid.",
+      "At the end, the stack should be empty for the string to be valid."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize for a student with some coding experience but limited DSA background.",
+    "input": {
+      "student_query": "What is the difference between BFS and DFS?",
+      "retrieved_context": "Breadth-first search explores nodes level by level using a queue. Depth-first search explores as far as possible down one path before backtracking, often using recursion or a stack. BFS is useful for shortest path in unweighted graphs. DFS is useful for connected components, cycle detection, and backtracking-style traversal."
+    },
+    "output": [
+      "BFS explores nearby nodes first, one level at a time.",
+      "DFS follows one path as far as it can before going back.",
+      "Use BFS when you need the shortest path in an unweighted graph.",
+      "Use DFS when you need to detect cycles, find connected groups, or try a path and return when it does not work.",
+      "BFS usually uses a queue, while DFS often uses recursion or a stack."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the main purpose and practical coding use.",
+    "input": {
+      "student_query": "When should I use a hash map?",
+      "retrieved_context": "Hash maps store key-value pairs and support average O(1) lookup, insertion, and deletion. They are commonly used for counting frequencies, checking membership, grouping values, and storing previously seen results."
+    },
+    "output": [
+      "Use a hash map when you need to find information quickly using a key.",
+      "It is great for counting how often values appear.",
+      "It can help check whether something has already been seen.",
+      "It can group related values or store results you may need again.",
+      "Most lookups are very fast on average."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Explain DP without overwhelming jargon.",
+    "input": {
+      "student_query": "How do I think about climbing stairs as dynamic programming?",
+      "retrieved_context": "In climbing stairs, a person can take 1 or 2 steps. The number of ways to reach step n equals the number of ways to reach n-1 plus the number of ways to reach n-2. Base cases are dp[0] = 1 and dp[1] = 1. The recurrence is dp[n] = dp[n-1] + dp[n-2]. Dynamic programming stores the answers for smaller steps so they do not need to be calculated repeatedly."
+    },
+    "output": [
+      "The problem asks how many ways you can reach a certain step.",
+      "To reach step n, you could come from step n-1 or step n-2.",
+      "So the answer for step n depends on the answers to smaller steps.",
+      "Store the smaller answers so you do not calculate them again.",
+      "This is the main idea behind dynamic programming."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize into practical bullet points for solving coding problems.",
+    "input": {
+      "student_query": "What is a sliding window?",
+      "retrieved_context": "Sliding window is a technique for arrays or strings where a window expands and shrinks while tracking information about the current range. A left pointer and a right pointer usually define the window: the right pointer expands it, and the left pointer shrinks it when needed. It is useful for contiguous subarray or substring problems, especially when looking for maximum, minimum, or valid ranges, and can avoid checking every possible range separately."
+    },
+    "output": [
+      "Sliding window is used for problems involving a contiguous part of an array or string.",
+      "You usually keep a left pointer and a right pointer.",
+      "The right pointer grows the window by adding new values.",
+      "The left pointer shrinks the window when needed.",
+      "It helps avoid checking every possible subarray manually."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Keep the explanation concise and student-friendly.",
+    "input": {
+      "student_query": "Why is a queue used for BFS?",
+      "retrieved_context": "BFS explores nodes in the order they are discovered. A queue follows first-in, first-out behavior, which ensures earlier discovered nodes are processed before later discovered nodes. This creates level-order traversal and allows BFS to find shortest paths in unweighted graphs."
+    },
+    "output": [
+      "BFS visits nodes in the order they are discovered.",
+      "A queue works well because it removes the oldest item first.",
+      "This makes BFS explore one level at a time.",
+      "That level-by-level behavior helps BFS find shortest paths in unweighted graphs."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the algorithm's purpose and major tradeoff.",
+    "input": {
+      "student_query": "What is merge sort?",
+      "retrieved_context": "Merge sort is a divide-and-conquer sorting algorithm. It splits the array into halves, recursively sorts each half, and merges the sorted halves together. Merge sort runs in O(n log n) time and usually uses O(n) extra space."
+    },
+    "output": [
+      "Merge sort is used to sort a list.",
+      "It splits the list into smaller halves.",
+      "Then it sorts those smaller parts and combines them back together.",
+      "It usually runs in O(n log n) time.",
+      "The main downside is that it often needs extra memory."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize why the pattern works.",
+    "input": {
+      "student_query": "How does two pointers solve sorted two sum?",
+      "retrieved_context": "For a sorted array, two pointers can start at the left and right ends. If their sum equals the target, the pair has been found. If the sum is too small, move the left pointer right to increase the sum. If the sum is too large, move the right pointer left to decrease the sum. This works because the array is sorted and checks possible pairs in O(n) time without trying every pair."
+    },
+    "output": [
+      "Two pointers works here because the array is sorted.",
+      "Start one pointer at the smallest value and one at the largest value.",
+      "If the sum is too small, move the left pointer right.",
+      "If the sum is too large, move the right pointer left.",
+      "This checks possible pairs efficiently without trying every pair."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the concept with use cases.",
+    "input": {
+      "student_query": "What is topological sort used for?",
+      "retrieved_context": "Topological sort orders nodes in a directed acyclic graph so that every node appears after its prerequisites. It is useful for scheduling, course prerequisites, dependency resolution, and build systems. It can be implemented with DFS or Kahn's algorithm."
+    },
+    "output": [
+      "Topological sort is used when some tasks must happen before others.",
+      "A common example is course prerequisites.",
+      "It creates an order where each requirement comes before the thing that depends on it.",
+      "It only works when there are no cycles.",
+      "It is useful for scheduling, dependency resolution, and build systems."
+    ]
+  }
+]
