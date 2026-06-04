@@ -5,11 +5,16 @@ langchain
 langchain-core
 langchain-ollama
 langchain-community
+langchain-huggingface
 langchain_text_splitters
+transformers>=4.49,<5
+torch
+accelerate
+faiss-cpu
 unstructured
 unstructured[pdf]
 fastembed
 pdfplumber
 sentence-transformers>=2.7.0
-numpy<2
+numpy>=1.26.4,<2
 elevenlabs

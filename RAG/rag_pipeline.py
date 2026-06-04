@@ -148,30 +148,43 @@
 
 
 
-import os
 from pathlib import Path
 from typing import List
+
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Document loading and processing
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 
 
 class RAGPipeline:
-    def __init__(self, data_folder: str, embedding_model: str = "all-MiniLM-L6-v2"):
+    def __init__(
+        self,
+        data_folder: str,
+        embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+        generation_model: str = "microsoft/Phi-4-mini-instruct",
+    ):
         """
         Initialize RAG pipeline.
         
         Args:
             data_folder: Path to folder containing PDFs
             embedding_model: HuggingFace model for embeddings
+            generation_model: HuggingFace instruction model used to answer questions
+            vector_store: holds the FAISS vector database instance after creation or loading
+            self.documents: holds the list of Document objects after loading and chunking
         """
         self.data_folder = Path(data_folder)
         self.embedding_model = embedding_model
+        self.generation_model = generation_model
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
+        self.tokenizer = None
+        self.generator = None
         self.vector_store = None
         self.documents = []
         
@@ -258,6 +271,71 @@ class RAGPipeline:
         
         results = self.vector_store.similarity_search_with_score(query_text, k=top_k)
         return results
+
+    def _load_generator(self) -> None:
+        """Load the generation model only when an answer is requested."""
+        if self.generator is not None:
+            return
+
+        print(f"Loading generation model {self.generation_model}...")
+        self.tokenizer = AutoTokenizer.from_pretrained(self.generation_model)
+        self.generator = AutoModelForCausalLM.from_pretrained(
+            self.generation_model,
+            device_map="auto",
+            torch_dtype="auto",
+            attn_implementation="eager",
+        )
+        self.generator.eval()
+
+    def generate_answer(
+        self,
+        query_text: str,
+        top_k: int = 3,
+        max_new_tokens: int = 300,
+    ) -> str:
+        """Retrieve relevant chunks and use Phi-4 Mini to answer the question."""
+        results = self.query(query_text, top_k=top_k)
+        context = "\n\n".join(
+            f"Source: {doc.metadata.get('source', 'Unknown')}\n{doc.page_content}"
+            for doc, _ in results
+        )
+
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a DSA tutor. Answer the user's question using only the "
+                    "provided context. If the context does not contain the answer, "
+                    "say that you do not know. Cite source filenames when useful."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"Context:\n{context}\n\nQuestion: {query_text}",
+            },
+        ]
+
+        self._load_generator()
+        inputs = self.tokenizer.apply_chat_template(
+            messages,
+            add_generation_prompt=True,
+            tokenize=True,
+            return_dict=True,
+            return_tensors="pt",
+        ).to(self.generator.device)
+
+        with torch.inference_mode():
+            outputs = self.generator.generate(
+                **inputs,
+                max_new_tokens=max_new_tokens,
+                do_sample=False,
+            )
+
+        prompt_length = inputs["input_ids"].shape[-1]
+        return self.tokenizer.decode(
+            outputs[0][prompt_length:],
+            skip_special_tokens=True,
+        ).strip()
     
     def load_existing_vectordb(self, vector_db_path: str = "vector_db") -> FAISS:
         """Load pre-existing vector database."""
@@ -286,7 +364,7 @@ def main():
     # Step 3: Create embeddings and store in vector database
     pipeline.create_embeddings_and_store("vector_db")
     
-    # Step 4: Query the vector database
+    # Step 4: Retrieve context and generate answers with Phi-4 Mini
     print("\n" + "="*60)
     print("Testing RAG Pipeline with sample queries")
     print("="*60)
@@ -299,11 +377,8 @@ def main():
     
     for query in test_queries:
         print(f"\nQuery: {query}")
-        results = pipeline.query(query, top_k=2)
-        for i, (doc, score) in enumerate(results, 1):
-            print(f"  Result {i} (score: {score:.4f})")
-            print(f"    Source: {doc.metadata.get('source', 'Unknown')}")
-            print(f"    Preview: {doc.page_content[:100]}...")
+        answer = pipeline.generate_answer(query, top_k=3)
+        print(f"Answer: {answer}")
 
 
 if __name__ == "__main__":
