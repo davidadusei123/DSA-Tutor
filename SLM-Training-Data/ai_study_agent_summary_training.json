@@ -147,5 +147,1175 @@
       "It only works when there are no cycles.",
       "It is useful for scheduling, dependency resolution, and build systems."
     ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "Why is array access usually O(1)?",
+      "retrieved_context": "An array stores its elements in contiguous memory locations. Because every element has the same size, the address of an item can be calculated directly from its index. This makes reading or updating an element by index O(1), although searching for an unknown value is still usually O(n)."
+    },
+    "output": [
+      "An array stores its elements in contiguous memory locations.",
+      "Because every element has the same size, the address of an item can be calculated directly from its index.",
+      "This makes reading or updating an element by index O(1), although searching for an unknown value is still usually O(n)."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a prefix sum array used for?",
+      "retrieved_context": "A prefix sum array stores the running total from the start of an array through each index. After it is built in O(n) time, the sum of a range can be found in O(1) time by subtracting two prefix values. It is useful when a problem asks many range-sum queries on data that does not change often."
+    },
+    "output": [
+      "A prefix sum array stores the running total from the start of an array through each index.",
+      "After it is built in O(n) time, the sum of a range can be found in O(1) time by subtracting two prefix values.",
+      "It is useful when a problem asks many range-sum queries on data that does not change often."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does a difference array help with range updates?",
+      "retrieved_context": "A difference array records how values change between neighboring positions instead of storing every final value immediately. To add a value to an entire range, update only the range start and the position after the range end. A final prefix sum reconstructs the updated array, making many range updates efficient."
+    },
+    "output": [
+      "A difference array records how values change between neighboring positions instead of storing every final value immediately.",
+      "To add a value to an entire range, update only the range start and the position after the range end.",
+      "A final prefix sum reconstructs the updated array, making many range updates efficient."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What does Kadane's algorithm solve?",
+      "retrieved_context": "Kadane's algorithm finds the maximum sum of a contiguous subarray. At each position, it decides whether to extend the current subarray or start a new one at the current value. It runs in O(n) time and uses O(1) extra space."
+    },
+    "output": [
+      "Kadane's algorithm finds the maximum sum of a contiguous subarray.",
+      "At each position, it decides whether to extend the current subarray or start a new one at the current value.",
+      "It runs in O(n) time and uses O(1) extra space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can I rotate an array efficiently?",
+      "retrieved_context": "An array can be rotated in place by reversing sections of it. For a right rotation by k positions, reverse the whole array, then reverse the first k elements, and finally reverse the remaining elements. This method runs in O(n) time and uses O(1) extra space."
+    },
+    "output": [
+      "An array can be rotated in place by reversing sections of it.",
+      "For a right rotation by k positions, reverse the whole array, then reverse the first k elements, and finally reverse the remaining elements.",
+      "This method runs in O(n) time and uses O(1) extra space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What should I remember when traversing a matrix?",
+      "retrieved_context": "A matrix is commonly traversed with one loop for rows and another loop for columns. Visiting every cell in an m by n matrix takes O(mn) time. Careful boundary checks are important when moving to neighboring cells or changing traversal direction."
+    },
+    "output": [
+      "A matrix is commonly traversed with one loop for rows and another loop for columns.",
+      "Visiting every cell in an m by n matrix takes O(mn) time.",
+      "Careful boundary checks are important when moving to neighboring cells or changing traversal direction."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I merge overlapping intervals?",
+      "retrieved_context": "To merge overlapping intervals, first sort the intervals by their start values. Keep a current interval and extend its end when the next interval overlaps it. When there is no overlap, save the current interval and begin a new one, giving an O(n log n) solution because of sorting."
+    },
+    "output": [
+      "To merge overlapping intervals, first sort the intervals by their start values.",
+      "Keep a current interval and extend its end when the next interval overlaps it.",
+      "When there is no overlap, save the current interval and begin a new one, giving an O(n log n) solution because of sorting."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "When is cyclic sort useful?",
+      "retrieved_context": "Cyclic sort is useful when an array contains values from a known consecutive range, such as 1 through n. It repeatedly places each value at the index where it belongs by swapping. This can reveal missing or duplicate values in O(n) time with O(1) extra space."
+    },
+    "output": [
+      "Cyclic sort is useful when an array contains values from a known consecutive range, such as 1 through n.",
+      "It repeatedly places each value at the index where it belongs by swapping.",
+      "This can reveal missing or duplicate values in O(n) time with O(1) extra space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is coordinate compression?",
+      "retrieved_context": "Coordinate compression replaces large or widely spaced values with smaller ranks while preserving their order. For example, values 100, 500, and 1000 can become 0, 1, and 2. It is useful when an algorithm needs array-sized storage but the original value range is too large."
+    },
+    "output": [
+      "Coordinate compression replaces large or widely spaced values with smaller ranks while preserving their order.",
+      "For example, values 100, 500, and 1000 can become 0, 1, and 2.",
+      "It is useful when an algorithm needs array-sized storage but the original value range is too large."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a monotonic array?",
+      "retrieved_context": "A monotonic array is entirely nondecreasing or entirely nonincreasing. To check whether an array is monotonic, track whether any pair breaks each possible direction. A single pass is enough, so the check takes O(n) time."
+    },
+    "output": [
+      "A monotonic array is entirely nondecreasing or entirely nonincreasing.",
+      "To check whether an array is monotonic, track whether any pair breaks each possible direction.",
+      "A single pass is enough, so the check takes O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a singly linked list?",
+      "retrieved_context": "A singly linked list stores data in nodes, and each node points to the next node. It supports O(1) insertion or deletion when the relevant previous node is already known. Accessing an item by position takes O(n) time because nodes must be followed from the head."
+    },
+    "output": [
+      "A singly linked list stores data in nodes, and each node points to the next node.",
+      "It supports O(1) insertion or deletion when the relevant previous node is already known.",
+      "Accessing an item by position takes O(n) time because nodes must be followed from the head."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the benefit of a doubly linked list?",
+      "retrieved_context": "A doubly linked list gives each node both a next pointer and a previous pointer. This allows traversal in either direction and makes removal of a known node easier. The tradeoff is extra memory and more pointer updates for each node."
+    },
+    "output": [
+      "A doubly linked list gives each node both a next pointer and a previous pointer.",
+      "This allows traversal in either direction and makes removal of a known node easier.",
+      "The tradeoff is extra memory and more pointer updates for each node."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do slow and fast pointers find the middle of a linked list?",
+      "retrieved_context": "A slow pointer moves one node at a time while a fast pointer moves two nodes at a time. When the fast pointer reaches the end, the slow pointer is at the middle. This finds the middle in O(n) time and O(1) extra space."
+    },
+    "output": [
+      "A slow pointer moves one node at a time while a fast pointer moves two nodes at a time.",
+      "When the fast pointer reaches the end, the slow pointer is at the middle.",
+      "This finds the middle in O(n) time and O(1) extra space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can I detect a cycle in a linked list?",
+      "retrieved_context": "Floyd's cycle detection algorithm uses a slow pointer and a fast pointer. If the list contains a cycle, the faster pointer will eventually meet the slower pointer inside the cycle. If the fast pointer reaches the end, the list has no cycle."
+    },
+    "output": [
+      "Floyd's cycle detection algorithm uses a slow pointer and a fast pointer.",
+      "If the list contains a cycle, the faster pointer will eventually meet the slower pointer inside the cycle.",
+      "If the fast pointer reaches the end, the list has no cycle."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I reverse a singly linked list?",
+      "retrieved_context": "To reverse a singly linked list, walk through the nodes while changing each next pointer to point to the previous node. Keep separate previous, current, and next references so the remaining list is not lost. The process takes O(n) time and O(1) extra space."
+    },
+    "output": [
+      "To reverse a singly linked list, walk through the nodes while changing each next pointer to point to the previous node.",
+      "Keep separate previous, current, and next references so the remaining list is not lost.",
+      "The process takes O(n) time and O(1) extra space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "Why is a dummy node useful in linked list problems?",
+      "retrieved_context": "A dummy node is a temporary node placed before the real head of a linked list. It makes operations near the head follow the same logic as operations in the middle of the list. This reduces special cases when inserting, deleting, or merging nodes."
+    },
+    "output": [
+      "A dummy node is a temporary node placed before the real head of a linked list.",
+      "It makes operations near the head follow the same logic as operations in the middle of the list.",
+      "This reduces special cases when inserting, deleting, or merging nodes."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I merge two sorted linked lists?",
+      "retrieved_context": "To merge two sorted linked lists, compare the current nodes and attach the smaller one to the result. Advance the pointer from the list whose node was chosen, then attach any remaining nodes when one list ends. The merge takes O(n + m) time for lists of lengths n and m."
+    },
+    "output": [
+      "To merge two sorted linked lists, compare the current nodes and attach the smaller one to the result.",
+      "Advance the pointer from the list whose node was chosen, then attach any remaining nodes when one list ends.",
+      "The merge takes O(n + m) time for lists of lengths n and m."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is an LRU cache?",
+      "retrieved_context": "An LRU cache removes the least recently used item when it reaches capacity. A hash map provides fast access to cached items, while a doubly linked list tracks usage order. Together they support average O(1) lookup, insertion, and removal."
+    },
+    "output": [
+      "An LRU cache removes the least recently used item when it reaches capacity.",
+      "A hash map provides fast access to cached items, while a doubly linked list tracks usage order.",
+      "Together they support average O(1) lookup, insertion, and removal."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a stack used for?",
+      "retrieved_context": "A stack stores items in last-in, first-out order, so the most recently added item is removed first. It is useful for undo operations, expression evaluation, parsing, and depth-first traversal. Push, pop, and top operations are typically O(1)."
+    },
+    "output": [
+      "A stack stores items in last-in, first-out order, so the most recently added item is removed first.",
+      "It is useful for undo operations, expression evaluation, parsing, and depth-first traversal.",
+      "Push, pop, and top operations are typically O(1)."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a queue used for?",
+      "retrieved_context": "A queue stores items in first-in, first-out order, so the earliest added item is removed first. It is useful for scheduling, buffering, and breadth-first traversal. Enqueue and dequeue operations are typically O(1) with an appropriate implementation."
+    },
+    "output": [
+      "A queue stores items in first-in, first-out order, so the earliest added item is removed first.",
+      "It is useful for scheduling, buffering, and breadth-first traversal.",
+      "Enqueue and dequeue operations are typically O(1) with an appropriate implementation."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a deque?",
+      "retrieved_context": "A deque is a double-ended queue that allows insertion and removal at both the front and the back. These operations are typically O(1). Deques are useful for sliding-window problems, palindrome checks, and algorithms that need flexible queue behavior."
+    },
+    "output": [
+      "A deque is a double-ended queue that allows insertion and removal at both the front and the back.",
+      "These operations are typically O(1).",
+      "Deques are useful for sliding-window problems, palindrome checks, and algorithms that need flexible queue behavior."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does a monotonic stack work?",
+      "retrieved_context": "A monotonic stack keeps its values in increasing or decreasing order as elements are processed. Values that break the required order are removed before the new value is added. It is useful for next-greater-element, next-smaller-element, and histogram problems, often in O(n) time."
+    },
+    "output": [
+      "A monotonic stack keeps its values in increasing or decreasing order as elements are processed.",
+      "Values that break the required order are removed before the new value is added.",
+      "It is useful for next-greater-element, next-smaller-element, and histogram problems, often in O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does a monotonic queue help with sliding window maximum?",
+      "retrieved_context": "A monotonic queue keeps candidate values for the current window in decreasing order. Smaller values are removed from the back because they cannot become the maximum while a larger, newer value remains. The front always holds the window maximum, allowing an O(n) solution."
+    },
+    "output": [
+      "A monotonic queue keeps candidate values for the current window in decreasing order.",
+      "Smaller values are removed from the back because they cannot become the maximum while a larger, newer value remains.",
+      "The front always holds the window maximum, allowing an O(n) solution."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How is a stack used to evaluate postfix expressions?",
+      "retrieved_context": "In a postfix expression, each operator appears after its operands. Scan the expression from left to right, push numbers onto a stack, and when an operator appears, pop its operands, compute the result, and push the result back. The final stack value is the expression result."
+    },
+    "output": [
+      "In a postfix expression, each operator appears after its operands.",
+      "Scan the expression from left to right, push numbers onto a stack, and when an operator appears, pop its operands, compute the result, and push the result back.",
+      "The final stack value is the expression result."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a circular queue?",
+      "retrieved_context": "A circular queue treats the end of its storage as connected to the beginning. Front and rear indices wrap around instead of wasting positions that were previously removed. This makes fixed-size queue storage efficient."
+    },
+    "output": [
+      "A circular queue treats the end of its storage as connected to the beginning.",
+      "Front and rear indices wrap around instead of wasting positions that were previously removed.",
+      "This makes fixed-size queue storage efficient."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can I implement a queue using two stacks?",
+      "retrieved_context": "A queue can be implemented with one stack for incoming items and another stack for outgoing items. Enqueue pushes onto the incoming stack, and dequeue uses the outgoing stack. When the outgoing stack is empty, moving all incoming items into it reverses their order and restores first-in, first-out behavior."
+    },
+    "output": [
+      "A queue can be implemented with one stack for incoming items and another stack for outgoing items.",
+      "Enqueue pushes onto the incoming stack, and dequeue uses the outgoing stack.",
+      "When the outgoing stack is empty, moving all incoming items into it reverses their order and restores first-in, first-out behavior."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a binary tree?",
+      "retrieved_context": "A binary tree is a tree in which each node has at most two children, usually called left and right. Binary trees are used to represent hierarchical relationships and support many recursive algorithms. Their performance depends on the tree's shape and the task being performed."
+    },
+    "output": [
+      "A binary tree is a tree in which each node has at most two children, usually called left and right.",
+      "Binary trees are used to represent hierarchical relationships and support many recursive algorithms.",
+      "Their performance depends on the tree's shape and the task being performed."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What makes a binary search tree different?",
+      "retrieved_context": "A binary search tree keeps smaller keys in the left subtree and larger keys in the right subtree for each node. This ordering supports search, insertion, and deletion in O(h) time, where h is the tree height. Operations are O(log n) in a balanced tree but can become O(n) in a highly skewed tree."
+    },
+    "output": [
+      "A binary search tree keeps smaller keys in the left subtree and larger keys in the right subtree for each node.",
+      "This ordering supports search, insertion, and deletion in O(h) time, where h is the tree height.",
+      "Operations are O(log n) in a balanced tree but can become O(n) in a highly skewed tree."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is an inorder tree traversal?",
+      "retrieved_context": "Inorder traversal visits a binary tree's left subtree, then the current node, then the right subtree. On a binary search tree, this visits keys in sorted order. It takes O(n) time because every node is visited once."
+    },
+    "output": [
+      "Inorder traversal visits a binary tree's left subtree, then the current node, then the right subtree.",
+      "On a binary search tree, this visits keys in sorted order.",
+      "It takes O(n) time because every node is visited once."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a preorder tree traversal?",
+      "retrieved_context": "Preorder traversal visits the current node before its left and right subtrees. It is useful when a parent must be processed before its children, such as copying or serializing a tree. It takes O(n) time for a tree with n nodes."
+    },
+    "output": [
+      "Preorder traversal visits the current node before its left and right subtrees.",
+      "It is useful when a parent must be processed before its children, such as copying or serializing a tree.",
+      "It takes O(n) time for a tree with n nodes."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a postorder tree traversal?",
+      "retrieved_context": "Postorder traversal visits the left subtree, then the right subtree, and finally the current node. It is useful when children must be processed before their parent, such as deleting a tree or computing subtree results. It takes O(n) time."
+    },
+    "output": [
+      "Postorder traversal visits the left subtree, then the right subtree, and finally the current node.",
+      "It is useful when children must be processed before their parent, such as deleting a tree or computing subtree results.",
+      "It takes O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does level-order traversal work?",
+      "retrieved_context": "Level-order traversal visits a tree one depth level at a time. A queue stores nodes that have been discovered but not yet processed. Each node is added and removed once, so the traversal takes O(n) time."
+    },
+    "output": [
+      "Level-order traversal visits a tree one depth level at a time.",
+      "A queue stores nodes that have been discovered but not yet processed.",
+      "Each node is added and removed once, so the traversal takes O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I find the height of a binary tree?",
+      "retrieved_context": "The height of a binary tree can be found recursively by taking one plus the larger height of the left and right subtrees. An empty subtree has a base height chosen by the problem's definition. Every node is visited once, so the computation takes O(n) time."
+    },
+    "output": [
+      "The height of a binary tree can be found recursively by taking one plus the larger height of the left and right subtrees.",
+      "An empty subtree has a base height chosen by the problem's definition.",
+      "Every node is visited once, so the computation takes O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What does it mean for a binary tree to be balanced?",
+      "retrieved_context": "A height-balanced binary tree keeps the heights of the left and right subtrees close at every node. One common definition requires their height difference to be at most one. Balanced trees avoid long chains and help operations remain efficient."
+    },
+    "output": [
+      "A height-balanced binary tree keeps the heights of the left and right subtrees close at every node.",
+      "One common definition requires their height difference to be at most one.",
+      "Balanced trees avoid long chains and help operations remain efficient."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the lowest common ancestor in a tree?",
+      "retrieved_context": "The lowest common ancestor of two nodes is the deepest node that has both nodes in its subtree, allowing a node to be its own ancestor. In a general binary tree, a recursive search can combine results from the left and right subtrees. The search takes O(n) time in the worst case."
+    },
+    "output": [
+      "The lowest common ancestor of two nodes is the deepest node that has both nodes in its subtree, allowing a node to be its own ancestor.",
+      "In a general binary tree, a recursive search can combine results from the left and right subtrees.",
+      "The search takes O(n) time in the worst case."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I validate a binary search tree?",
+      "retrieved_context": "A binary search tree is valid only if every node falls within the allowed range created by its ancestors. During recursion, pass lower and upper bounds to each child rather than checking only the immediate parent. This validates the whole tree in O(n) time."
+    },
+    "output": [
+      "A binary search tree is valid only if every node falls within the allowed range created by its ancestors.",
+      "During recursion, pass lower and upper bounds to each child rather than checking only the immediate parent.",
+      "This validates the whole tree in O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I find the kth smallest value in a binary search tree?",
+      "retrieved_context": "An inorder traversal of a binary search tree visits values in sorted order. Count visited nodes during the traversal and stop when the kth node is reached. The method takes O(h + k) time when it can stop early, where h is the tree height."
+    },
+    "output": [
+      "An inorder traversal of a binary search tree visits values in sorted order.",
+      "Count visited nodes during the traversal and stop when the kth node is reached.",
+      "The method takes O(h + k) time when it can stop early, where h is the tree height."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a tree diameter?",
+      "retrieved_context": "The diameter of a tree is the length of the longest path between any two nodes. For each node, the longest path through it uses the heights of its left and right subtrees. Computing heights while tracking the best path finds the diameter in O(n) time."
+    },
+    "output": [
+      "The diameter of a tree is the length of the longest path between any two nodes.",
+      "For each node, the longest path through it uses the heights of its left and right subtrees.",
+      "Computing heights while tracking the best path finds the diameter in O(n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is tree serialization?",
+      "retrieved_context": "Tree serialization converts a tree into a sequence that can be stored or transmitted. The sequence must include enough information, such as markers for missing children, to rebuild the same structure later. Deserialization reads that sequence and reconstructs the tree."
+    },
+    "output": [
+      "Tree serialization converts a tree into a sequence that can be stored or transmitted.",
+      "The sequence must include enough information, such as markers for missing children, to rebuild the same structure later.",
+      "Deserialization reads that sequence and reconstructs the tree."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a trie?",
+      "retrieved_context": "A trie is a tree-like structure for storing strings by their prefixes. Each edge represents a character, and paths from the root represent prefixes or complete words. Tries support insertion, search, and prefix checks in O(L) time for a string of length L."
+    },
+    "output": [
+      "A trie is a tree-like structure for storing strings by their prefixes.",
+      "Each edge represents a character, and paths from the root represent prefixes or complete words.",
+      "Tries support insertion, search, and prefix checks in O(L) time for a string of length L."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "When should I use a segment tree?",
+      "retrieved_context": "A segment tree stores information about ranges of an array in a binary tree structure. It can answer range queries and handle point updates in O(log n) time after O(n) construction. It is useful when array values change and many range queries must be answered."
+    },
+    "output": [
+      "A segment tree stores information about ranges of an array in a binary tree structure.",
+      "It can answer range queries and handle point updates in O(log n) time after O(n) construction.",
+      "It is useful when array values change and many range queries must be answered."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a Fenwick tree?",
+      "retrieved_context": "A Fenwick tree, also called a binary indexed tree, stores partial sums using a compact array structure. It supports prefix-sum queries and point updates in O(log n) time. It is simpler and uses less memory than a segment tree when sum-like operations are enough."
+    },
+    "output": [
+      "A Fenwick tree, also called a binary indexed tree, stores partial sums using a compact array structure.",
+      "It supports prefix-sum queries and point updates in O(log n) time.",
+      "It is simpler and uses less memory than a segment tree when sum-like operations are enough."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a min-heap?",
+      "retrieved_context": "A min-heap is a complete binary tree where every parent value is no greater than its children. The smallest value is always at the root. Insertion and removing the minimum take O(log n), while reading the minimum takes O(1)."
+    },
+    "output": [
+      "A min-heap is a complete binary tree where every parent value is no greater than its children.",
+      "The smallest value is always at the root.",
+      "Insertion and removing the minimum take O(log n), while reading the minimum takes O(1)."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a max-heap?",
+      "retrieved_context": "A max-heap is a complete binary tree where every parent value is no less than its children. The largest value is always at the root. It is useful when a program repeatedly needs the current largest item."
+    },
+    "output": [
+      "A max-heap is a complete binary tree where every parent value is no less than its children.",
+      "The largest value is always at the root.",
+      "It is useful when a program repeatedly needs the current largest item."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a priority queue?",
+      "retrieved_context": "A priority queue removes items according to priority rather than insertion order. It is commonly implemented with a heap, which supports insertion and removal of the highest-priority item in O(log n) time. Priority queues are useful in scheduling and shortest-path algorithms."
+    },
+    "output": [
+      "A priority queue removes items according to priority rather than insertion order.",
+      "It is commonly implemented with a heap, which supports insertion and removal of the highest-priority item in O(log n) time.",
+      "Priority queues are useful in scheduling and shortest-path algorithms."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does heap sort work?",
+      "retrieved_context": "Heap sort builds a max-heap from the array, then repeatedly moves the largest value at the root to the end. After each move, it restores the heap property in the remaining unsorted portion. Heap sort runs in O(n log n) time and uses O(1) extra array space."
+    },
+    "output": [
+      "Heap sort builds a max-heap from the array, then repeatedly moves the largest value at the root to the end.",
+      "After each move, it restores the heap property in the remaining unsorted portion.",
+      "Heap sort runs in O(n log n) time and uses O(1) extra array space."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can a heap find the kth largest element?",
+      "retrieved_context": "A min-heap of size k can track the k largest values seen so far. Add each value and remove the smallest whenever the heap grows beyond k elements. After all values are processed, the heap root is the kth largest value, and the method takes O(n log k) time."
+    },
+    "output": [
+      "A min-heap of size k can track the k largest values seen so far.",
+      "Add each value and remove the smallest whenever the heap grows beyond k elements.",
+      "After all values are processed, the heap root is the kth largest value, and the method takes O(n log k) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is an adjacency list?",
+      "retrieved_context": "An adjacency list represents a graph by storing a list of neighbors for each vertex. It uses O(V + E) space, which is efficient for sparse graphs. Iterating over a vertex's outgoing edges is also efficient."
+    },
+    "output": [
+      "An adjacency list represents a graph by storing a list of neighbors for each vertex.",
+      "It uses O(V + E) space, which is efficient for sparse graphs.",
+      "Iterating over a vertex's outgoing edges is also efficient."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is an adjacency matrix?",
+      "retrieved_context": "An adjacency matrix represents a graph with a V by V table where each entry records whether an edge exists. Checking a specific edge takes O(1) time. The matrix uses O(V squared) space, so it is most suitable for dense graphs or small vertex counts."
+    },
+    "output": [
+      "An adjacency matrix represents a graph with a V by V table where each entry records whether an edge exists.",
+      "Checking a specific edge takes O(1) time.",
+      "The matrix uses O(V squared) space, so it is most suitable for dense graphs or small vertex counts."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I find connected components in a graph?",
+      "retrieved_context": "A connected component is a group of vertices that can reach one another in an undirected graph. Start BFS or DFS from each unvisited vertex and mark every vertex reached in that traversal. Each new traversal identifies one component, and the full process takes O(V + E) time."
+    },
+    "output": [
+      "A connected component is a group of vertices that can reach one another in an undirected graph.",
+      "Start BFS or DFS from each unvisited vertex and mark every vertex reached in that traversal.",
+      "Each new traversal identifies one component, and the full process takes O(V + E) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can DFS detect a cycle in an undirected graph?",
+      "retrieved_context": "During DFS in an undirected graph, track the parent of each visited vertex. Reaching an already visited neighbor that is not the current vertex's parent indicates a cycle. The algorithm takes O(V + E) time."
+    },
+    "output": [
+      "During DFS in an undirected graph, track the parent of each visited vertex.",
+      "Reaching an already visited neighbor that is not the current vertex's parent indicates a cycle.",
+      "The algorithm takes O(V + E) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How can DFS detect a cycle in a directed graph?",
+      "retrieved_context": "During DFS in a directed graph, track which vertices are currently on the active recursion path. Reaching a vertex that is already on that active path indicates a directed cycle. Vertices are removed from the active path when their DFS call finishes."
+    },
+    "output": [
+      "During DFS in a directed graph, track which vertices are currently on the active recursion path.",
+      "Reaching a vertex that is already on that active path indicates a directed cycle.",
+      "Vertices are removed from the active path when their DFS call finishes."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is Dijkstra's algorithm used for?",
+      "retrieved_context": "Dijkstra's algorithm finds shortest paths from one source in a graph with nonnegative edge weights. It repeatedly chooses the unprocessed vertex with the smallest known distance and relaxes its outgoing edges. With an adjacency list and priority queue, it commonly runs in O((V + E) log V) time."
+    },
+    "output": [
+      "Dijkstra's algorithm finds shortest paths from one source in a graph with nonnegative edge weights.",
+      "It repeatedly chooses the unprocessed vertex with the smallest known distance and relaxes its outgoing edges.",
+      "With an adjacency list and priority queue, it commonly runs in O((V + E) log V) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "Why does Dijkstra's algorithm not allow negative edges?",
+      "retrieved_context": "Dijkstra's algorithm assumes that once the smallest known distance is chosen, that distance cannot later improve. A negative edge can create a cheaper path after a vertex has already been finalized. Therefore graphs with negative edge weights require a different shortest-path algorithm."
+    },
+    "output": [
+      "Dijkstra's algorithm assumes that once the smallest known distance is chosen, that distance cannot later improve.",
+      "A negative edge can create a cheaper path after a vertex has already been finalized.",
+      "Therefore graphs with negative edge weights require a different shortest-path algorithm."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the Bellman-Ford algorithm?",
+      "retrieved_context": "Bellman-Ford finds shortest paths from one source even when some edge weights are negative. It relaxes every edge repeatedly, up to V minus 1 times, because a shortest simple path uses at most that many edges. An additional relaxation pass can detect a reachable negative-weight cycle."
+    },
+    "output": [
+      "Bellman-Ford finds shortest paths from one source even when some edge weights are negative.",
+      "It relaxes every edge repeatedly, up to V minus 1 times, because a shortest simple path uses at most that many edges.",
+      "An additional relaxation pass can detect a reachable negative-weight cycle."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the Floyd-Warshall algorithm?",
+      "retrieved_context": "Floyd-Warshall computes shortest paths between every pair of vertices. It gradually allows each vertex to be used as an intermediate point on a path. The algorithm runs in O(V cubed) time and is most practical for smaller graphs."
+    },
+    "output": [
+      "Floyd-Warshall computes shortest paths between every pair of vertices.",
+      "It gradually allows each vertex to be used as an intermediate point on a path.",
+      "The algorithm runs in O(V cubed) time and is most practical for smaller graphs."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a minimum spanning tree?",
+      "retrieved_context": "A minimum spanning tree connects all vertices in a weighted undirected graph with the smallest possible total edge weight. It contains no cycles and uses exactly V minus 1 edges when the graph is connected. Prim's and Kruskal's algorithms are common ways to build one."
+    },
+    "output": [
+      "A minimum spanning tree connects all vertices in a weighted undirected graph with the smallest possible total edge weight.",
+      "It contains no cycles and uses exactly V minus 1 edges when the graph is connected.",
+      "Prim's and Kruskal's algorithms are common ways to build one."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does Kruskal's algorithm work?",
+      "retrieved_context": "Kruskal's algorithm builds a minimum spanning tree by considering edges from smallest weight to largest. It adds an edge only when that edge connects two currently separate components. A disjoint-set structure efficiently checks whether an edge would create a cycle."
+    },
+    "output": [
+      "Kruskal's algorithm builds a minimum spanning tree by considering edges from smallest weight to largest.",
+      "It adds an edge only when that edge connects two currently separate components.",
+      "A disjoint-set structure efficiently checks whether an edge would create a cycle."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does Prim's algorithm work?",
+      "retrieved_context": "Prim's algorithm grows a minimum spanning tree from a starting vertex. It repeatedly adds the lowest-weight edge that connects the current tree to a new vertex. A priority queue can efficiently select the next edge."
+    },
+    "output": [
+      "Prim's algorithm grows a minimum spanning tree from a starting vertex.",
+      "It repeatedly adds the lowest-weight edge that connects the current tree to a new vertex.",
+      "A priority queue can efficiently select the next edge."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a disjoint-set union structure?",
+      "retrieved_context": "A disjoint-set union structure tracks items that belong to separate groups. The find operation identifies an item's group, and union combines two groups. Path compression and union by rank or size make these operations nearly constant time in practice."
+    },
+    "output": [
+      "A disjoint-set union structure tracks items that belong to separate groups.",
+      "The find operation identifies an item's group, and union combines two groups.",
+      "Path compression and union by rank or size make these operations nearly constant time in practice."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I check whether a graph is bipartite?",
+      "retrieved_context": "A graph is bipartite if its vertices can be split into two groups so every edge goes between the groups. BFS or DFS can assign alternating colors to neighboring vertices. If an edge connects two vertices with the same color, the graph is not bipartite."
+    },
+    "output": [
+      "A graph is bipartite if its vertices can be split into two groups so every edge goes between the groups.",
+      "BFS or DFS can assign alternating colors to neighboring vertices.",
+      "If an edge connects two vertices with the same color, the graph is not bipartite."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is multi-source BFS?",
+      "retrieved_context": "Multi-source BFS starts by placing several starting vertices into the queue at the same time. It then expands outward level by level from all sources together. This finds the shortest distance to the nearest source in an unweighted graph."
+    },
+    "output": [
+      "Multi-source BFS starts by placing several starting vertices into the queue at the same time.",
+      "It then expands outward level by level from all sources together.",
+      "This finds the shortest distance to the nearest source in an unweighted graph."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does Kahn's algorithm perform topological sorting?",
+      "retrieved_context": "Kahn's algorithm starts with every directed-graph vertex whose indegree is zero. It repeatedly removes one of those vertices, adds it to the ordering, and decreases the indegree of its outgoing neighbors. If fewer than V vertices are processed, the graph contains a cycle."
+    },
+    "output": [
+      "Kahn's algorithm starts with every directed-graph vertex whose indegree is zero.",
+      "It repeatedly removes one of those vertices, adds it to the ordering, and decreases the indegree of its outgoing neighbors.",
+      "If fewer than V vertices are processed, the graph contains a cycle."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a strongly connected component?",
+      "retrieved_context": "A strongly connected component is a maximal group of vertices in a directed graph where every vertex can reach every other vertex. Algorithms such as Kosaraju's or Tarjan's find these components in O(V + E) time. They help reveal the larger structure of directed graphs."
+    },
+    "output": [
+      "A strongly connected component is a maximal group of vertices in a directed graph where every vertex can reach every other vertex.",
+      "Algorithms such as Kosaraju's or Tarjan's find these components in O(V + E) time.",
+      "They help reveal the larger structure of directed graphs."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is quicksort?",
+      "retrieved_context": "Quicksort chooses a pivot, partitions values into sides based on the pivot, and recursively sorts the partitions. Its average running time is O(n log n), but poor pivot choices can lead to O(n squared) time. It is often fast in practice and can sort in place."
+    },
+    "output": [
+      "Quicksort chooses a pivot, partitions values into sides based on the pivot, and recursively sorts the partitions.",
+      "Its average running time is O(n log n), but poor pivot choices can lead to O(n squared) time.",
+      "It is often fast in practice and can sort in place."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is insertion sort?",
+      "retrieved_context": "Insertion sort builds a sorted prefix one element at a time. Each new element is shifted left until it reaches its correct position. It runs in O(n squared) time in the worst case but performs well on small or nearly sorted arrays."
+    },
+    "output": [
+      "Insertion sort builds a sorted prefix one element at a time.",
+      "Each new element is shifted left until it reaches its correct position.",
+      "It runs in O(n squared) time in the worst case but performs well on small or nearly sorted arrays."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is selection sort?",
+      "retrieved_context": "Selection sort repeatedly finds the smallest value in the unsorted portion and swaps it into the next output position. It performs O(n squared) comparisons regardless of input order. Its main advantage is simplicity and a small number of swaps."
+    },
+    "output": [
+      "Selection sort repeatedly finds the smallest value in the unsorted portion and swaps it into the next output position.",
+      "It performs O(n squared) comparisons regardless of input order.",
+      "Its main advantage is simplicity and a small number of swaps."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is counting sort?",
+      "retrieved_context": "Counting sort counts how many times each key appears, then uses those counts to build the sorted output. It runs in O(n + k) time, where k is the key range. It is useful when values are integers from a reasonably small range."
+    },
+    "output": [
+      "Counting sort counts how many times each key appears, then uses those counts to build the sorted output.",
+      "It runs in O(n + k) time, where k is the key range.",
+      "It is useful when values are integers from a reasonably small range."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is radix sort?",
+      "retrieved_context": "Radix sort processes keys one digit or position at a time using a stable sub-sort. It can sort integers or strings without directly comparing whole keys. Its performance depends on the number of positions and the range used at each position."
+    },
+    "output": [
+      "Radix sort processes keys one digit or position at a time using a stable sub-sort.",
+      "It can sort integers or strings without directly comparing whole keys.",
+      "Its performance depends on the number of positions and the range used at each position."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What does it mean for a sorting algorithm to be stable?",
+      "retrieved_context": "A stable sorting algorithm preserves the original relative order of items that have equal keys. Stability matters when records have multiple fields and a previous ordering should remain meaningful. Merge sort and insertion sort can be implemented stably."
+    },
+    "output": [
+      "A stable sorting algorithm preserves the original relative order of items that have equal keys.",
+      "Stability matters when records have multiple fields and a previous ordering should remain meaningful.",
+      "Merge sort and insertion sort can be implemented stably."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I use binary search on an answer?",
+      "retrieved_context": "Binary search on an answer is used when possible solutions have a monotonic property, meaning that after some boundary all answers are valid or invalid. Test a middle candidate and use the result to discard half of the candidate range. This can turn a large numeric search space into a logarithmic number of checks."
+    },
+    "output": [
+      "Binary search on an answer is used when possible solutions have a monotonic property, meaning that after some boundary all answers are valid or invalid.",
+      "Test a middle candidate and use the result to discard half of the candidate range.",
+      "This can turn a large numeric search space into a logarithmic number of checks."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What are lower bound and upper bound searches?",
+      "retrieved_context": "A lower-bound search finds the first position where a value could be inserted without breaking sorted order. An upper-bound search finds the first position after all values equal to the target. Together they can locate a target's full range in O(log n) time."
+    },
+    "output": [
+      "A lower-bound search finds the first position where a value could be inserted without breaking sorted order.",
+      "An upper-bound search finds the first position after all values equal to the target.",
+      "Together they can locate a target's full range in O(log n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is interpolation search?",
+      "retrieved_context": "Interpolation search estimates where a target may appear based on its value and the values at the current search boundaries. It can be fast for uniformly distributed sorted numeric data. Its worst-case time is O(n), so binary search is more predictable."
+    },
+    "output": [
+      "Interpolation search estimates where a target may appear based on its value and the values at the current search boundaries.",
+      "It can be fast for uniformly distributed sorted numeric data.",
+      "Its worst-case time is O(n), so binary search is more predictable."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is memoization?",
+      "retrieved_context": "Memoization is a top-down dynamic programming technique that stores the result of a function call after it is computed. If the same state is requested again, the stored result is returned instead of repeating the work. It is useful for recursive problems with overlapping subproblems."
+    },
+    "output": [
+      "Memoization is a top-down dynamic programming technique that stores the result of a function call after it is computed.",
+      "If the same state is requested again, the stored result is returned instead of repeating the work.",
+      "It is useful for recursive problems with overlapping subproblems."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is tabulation?",
+      "retrieved_context": "Tabulation is a bottom-up dynamic programming technique that fills a table from known base cases toward the final answer. It avoids recursive call overhead and makes the order of state computation explicit. The table stores results that later states depend on."
+    },
+    "output": [
+      "Tabulation is a bottom-up dynamic programming technique that fills a table from known base cases toward the final answer.",
+      "It avoids recursive call overhead and makes the order of state computation explicit.",
+      "The table stores results that later states depend on."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I recognize a dynamic programming problem?",
+      "retrieved_context": "Dynamic programming is useful when a problem has overlapping subproblems and an optimal answer can be built from smaller answers. A good first step is to define the state, the transition between states, and the base cases. Memoization or tabulation can then avoid repeated work."
+    },
+    "output": [
+      "Dynamic programming is useful when a problem has overlapping subproblems and an optimal answer can be built from smaller answers.",
+      "A good first step is to define the state, the transition between states, and the base cases.",
+      "Memoization or tabulation can then avoid repeated work."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the 0/1 knapsack problem?",
+      "retrieved_context": "The 0/1 knapsack problem asks for the maximum value that fits within a capacity when each item can be chosen at most once. A dynamic programming state can represent the best value for a prefix of items and a remaining capacity. The standard solution runs in O(nW) time for n items and capacity W."
+    },
+    "output": [
+      "The 0/1 knapsack problem asks for the maximum value that fits within a capacity when each item can be chosen at most once.",
+      "A dynamic programming state can represent the best value for a prefix of items and a remaining capacity.",
+      "The standard solution runs in O(nW) time for n items and capacity W."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the unbounded knapsack problem?",
+      "retrieved_context": "The unbounded knapsack problem allows each item to be chosen any number of times. Its dynamic programming transition may reuse the same item while building larger capacities. This difference changes the order in which a one-dimensional table is updated."
+    },
+    "output": [
+      "The unbounded knapsack problem allows each item to be chosen any number of times.",
+      "Its dynamic programming transition may reuse the same item while building larger capacities.",
+      "This difference changes the order in which a one-dimensional table is updated."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the longest common subsequence problem?",
+      "retrieved_context": "The longest common subsequence problem asks for the longest sequence that appears in two sequences in the same relative order, without requiring contiguous positions. A two-dimensional dynamic programming table compares prefixes of both sequences. The standard solution takes O(nm) time."
+    },
+    "output": [
+      "The longest common subsequence problem asks for the longest sequence that appears in two sequences in the same relative order, without requiring contiguous positions.",
+      "A two-dimensional dynamic programming table compares prefixes of both sequences.",
+      "The standard solution takes O(nm) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is the longest increasing subsequence problem?",
+      "retrieved_context": "The longest increasing subsequence problem asks for the longest subsequence whose values strictly increase. A simple dynamic programming solution compares each value with earlier smaller values in O(n squared) time. A more advanced method uses binary search to achieve O(n log n) time."
+    },
+    "output": [
+      "The longest increasing subsequence problem asks for the longest subsequence whose values strictly increase.",
+      "A simple dynamic programming solution compares each value with earlier smaller values in O(n squared) time.",
+      "A more advanced method uses binary search to achieve O(n log n) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does dynamic programming solve coin change?",
+      "retrieved_context": "In the minimum coin change problem, each state can represent the fewest coins needed to make a particular amount. For each amount, try using each available coin and build from a smaller amount. Unreachable states must be handled so they are not treated as valid answers."
+    },
+    "output": [
+      "In the minimum coin change problem, each state can represent the fewest coins needed to make a particular amount.",
+      "For each amount, try using each available coin and build from a smaller amount.",
+      "Unreachable states must be handled so they are not treated as valid answers."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is edit distance?",
+      "retrieved_context": "Edit distance measures the minimum number of insertions, deletions, and replacements needed to change one string into another. A dynamic programming table compares prefixes of the two strings. The standard solution takes O(nm) time."
+    },
+    "output": [
+      "Edit distance measures the minimum number of insertions, deletions, and replacements needed to change one string into another.",
+      "A dynamic programming table compares prefixes of the two strings.",
+      "The standard solution takes O(nm) time."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is interval dynamic programming?",
+      "retrieved_context": "Interval dynamic programming defines states over contiguous ranges, such as the best answer for indices left through right. It often tries different split points inside each range. This pattern appears in problems where smaller intervals combine to solve larger intervals."
+    },
+    "output": [
+      "Interval dynamic programming defines states over contiguous ranges, such as the best answer for indices left through right.",
+      "It often tries different split points inside each range.",
+      "This pattern appears in problems where smaller intervals combine to solve larger intervals."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is tree dynamic programming?",
+      "retrieved_context": "Tree dynamic programming computes a result for each node using results from its children. A traversal processes subtrees before combining their answers at the parent. It is useful for optimization and counting problems defined over tree structure."
+    },
+    "output": [
+      "Tree dynamic programming computes a result for each node using results from its children.",
+      "A traversal processes subtrees before combining their answers at the parent.",
+      "It is useful for optimization and counting problems defined over tree structure."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is bitmask dynamic programming?",
+      "retrieved_context": "Bitmask dynamic programming uses the bits of an integer to represent which items have been selected or visited. Each mask is a compact state for a subset of items. It is useful when the number of items is small enough for O(2 to the n) states."
+    },
+    "output": [
+      "Bitmask dynamic programming uses the bits of an integer to represent which items have been selected or visited.",
+      "Each mask is a compact state for a subset of items.",
+      "It is useful when the number of items is small enough for O(2 to the n) states."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is a greedy algorithm?",
+      "retrieved_context": "A greedy algorithm builds a solution by repeatedly making the best-looking local choice. It works only when those local choices can be proven to lead to a globally optimal result. Greedy methods are often simple and fast, but they are not correct for every optimization problem."
+    },
+    "output": [
+      "A greedy algorithm builds a solution by repeatedly making the best-looking local choice.",
+      "It works only when those local choices can be proven to lead to a globally optimal result.",
+      "Greedy methods are often simple and fast, but they are not correct for every optimization problem."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How does the activity selection greedy algorithm work?",
+      "retrieved_context": "The activity selection problem chooses the largest number of non-overlapping activities. Sort activities by finishing time and repeatedly choose the next activity that starts after the last chosen one finishes. Choosing the earliest finish leaves the most room for future activities."
+    },
+    "output": [
+      "The activity selection problem chooses the largest number of non-overlapping activities.",
+      "Sort activities by finishing time and repeatedly choose the next activity that starts after the last chosen one finishes.",
+      "Choosing the earliest finish leaves the most room for future activities."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "What is backtracking?",
+      "retrieved_context": "Backtracking builds a candidate solution step by step and abandons a path when it cannot lead to a valid result. It is commonly used for permutations, combinations, constraint puzzles, and search problems. Pruning invalid paths can greatly reduce the work compared with checking every complete possibility."
+    },
+    "output": [
+      "Backtracking builds a candidate solution step by step and abandons a path when it cannot lead to a valid result.",
+      "It is commonly used for permutations, combinations, constraint puzzles, and search problems.",
+      "Pruning invalid paths can greatly reduce the work compared with checking every complete possibility."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I generate permutations with backtracking?",
+      "retrieved_context": "To generate permutations, choose one unused value for the next position, recurse, and then undo the choice. A used set or swaps can track which values are already in the current arrangement. The algorithm explores every possible ordering."
+    },
+    "output": [
+      "To generate permutations, choose one unused value for the next position, recurse, and then undo the choice.",
+      "A used set or swaps can track which values are already in the current arrangement.",
+      "The algorithm explores every possible ordering."
+    ]
+  },
+  {
+    "mode": "summary",
+    "instruction": "Summarize the retrieved context into clear, beginner-friendly bullet points. Avoid unnecessary jargon and focus on purpose and practical use.",
+    "input": {
+      "student_query": "How do I generate subsets with backtracking?",
+      "retrieved_context": "To generate subsets, process each item with a choice to include it or exclude it. Backtracking records the current subset, explores a choice, and then removes that choice before continuing. A set of n items has 2 to the n subsets."
+    },
+    "output": [
+      "To generate subsets, process each item with a choice to include it or exclude it.",
+      "Backtracking records the current subset, explores a choice, and then removes that choice before continuing.",
+      "A set of n items has 2 to the n subsets."
+    ]
   }
 ]

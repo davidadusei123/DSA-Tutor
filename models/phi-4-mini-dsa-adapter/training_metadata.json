@@ -1,0 +1,9 @@
+{
+  "base_model": "microsoft/Phi-4-mini-instruct",
+  "training_examples": 200,
+  "modes": [
+    "raw_answer",
+    "summary"
+  ],
+  "adapter_type": "QLoRA"
+}

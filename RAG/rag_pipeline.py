@@ -1,157 +1,8 @@
-# """
-# RAG Pipeline: Load PDFs, chunk, embed, and store in vector database
-# """
-# from pathlib import Path
-# import ollama
-# from langchain_community.document_loaders import UnstructuredPDFLoader
-# from langchain_community.document_loaders import OnlinePDFLoader
-# from langchain_ollama import OllamaEmbeddings
-# from langchain_text_splitters import RecursiveCharacterTextSplitter
-# from langchain_community.vectorstores import Chroma
-# from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-# from langchain_core.output_parsers import StrOutputParser
-# from langchain_ollama import ChatOllama
-# from langchain_core.runnables import RunnablePassthrough
-# from langchain_classic.retrievers.multi_query import MultiQueryRetriever 
-
-# class RAGPipeline:
-#     def __init__(self, data_folder: str):
-#         """
-#         Initialize RAG pipeline.
-        
-#         Args:
-#             data_folder: Path to folder containing PDFs
-#             embedding_model: HuggingFace model for embeddings
-#         """
-#         self.data_folder = data_folder
-#         self.documents = []
-#         self.vector_store = None
-
-#     def load_pdfs(self):
-#         """
-#         Load all PDFs from data folder and stores them in the class's document list.
-#         """
-
-#         print(f"Loading PDFs from {self.data_folder}...")
-#         pdf_files = list(Path(self.data_folder).glob("*.pdf"))
-#         print(f"Found {len(pdf_files)} PDF files")
-
-#         docs = []
-#         for file in pdf_files:
-#             loader = UnstructuredPDFLoader(file_path=str(file))
-#             data = loader.load()
-#             print(f"Done loading {file.name}...")
-
-#             for doc in data:
-#                 doc.metadata["source"] = file.name
-#             docs.extend(data)
-
-#         self.documents = docs
-#         print(f"Total documents loaded: {len(self.documents)}")
-#         return docs
-
-#     def chunk_documents(self):
-#         """
-#         Split documents into chunks and stores them in the class's document list.
-#         """
-
-#         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1200, chunk_overlap=300) # each chunk is 1200 chars with 300 char overlap (greater overlap the better because it includes context)
-#         chunks = text_splitter.split_documents(self.documents)
-#         print("Done splitting...")
-#         self.documents = chunks
-#         return chunks
-    
-#     def create_embeddings_and_store(self, vector_db_path: str = "vector_db") -> Chroma:
-#         """
-#         Create embeddings and store in Chroma vector database.
-#         """
-
-#         ollama.pull("nomic-embed-text")
-
-#         self.vector_store = Chroma.from_documents(
-#             documents=self.documents,
-#             embedding=OllamaEmbeddings(model="nomic-embed-text"),
-#             collection_name="rag_collection")
-        
-#         self.vector_store.save_local(vector_db_path)
-#         print(f"Vector database saved to {vector_db_path}")
-        
-#         print("Done adding to vector database...")
-#         return self.vector_store
-    
-#     def query_and_retrieve(self, query_text: str, top_k: int = 3, vector_db: Chroma = None):
-#         """
-#         Search vector database for similar documents and answer query using RAG approach.
-
-#         Args:
-#             query_text: Search query
-#             top_k: Number of results to return
-#             vector_db: Chroma vector database instance
-        
-#         """
-#         llm = ChatOllama(model="llama3.2")
-#         QueryPrompt = PromptTemplate(
-#             input_variables=["question"],
-#             template="Given the following question, retrieve the most relevant documents from the vector database: {question}"
-#         )
-
-#         retriever = MultiQueryRetriever.from_llm(
-#             vector_db.as_retriever(), llm, prompt=QueryPrompt
-#         )
-
-#         # RAG prompt
-#         template = """Answer the question based on the following retrieved documents. If you don't know the answer, say you don't know.
-#         {context}
-#         Question: {question}
-#         """
-
-#         prompt = ChatPromptTemplate.from_template(template)
-
-#         chain = (
-#             {"context": retriever, "question": RunnablePassthrough()}
-#             | prompt
-#             | llm
-#             | StrOutputParser()
-#         )
-
-#         res = chain.invoke(query_text)
-#         return res
-
-    
-
-# def main():
-#     """Example usage of RAG pipeline."""
-    
-#     # Initialize pipeline
-#     data_folder = r"C:\Users\ik_ad\DSA-Tutor\DSA-Tutor\Data"
-#     pipeline = RAGPipeline(data_folder)
-    
-#     # Step 1: Load PDFs
-#     pipeline.load_pdfs()
-
-#     # Step 2: Chunk documents
-#     pipeline.chunk_documents()
-
-#     # Step 3: Create embeddings and store in vector database
-#     vector_db = pipeline.create_embeddings_and_store()
-
-#     # Step 4: Send query and retrieve relevant information
-#     res = pipeline.query_and_retrieve("What is dynamic programming?", top_k=2, vector_db=vector_db)
-#     print("\n" + "="*60)
-#     print("Query Result:\n" + res)
-
-
-
-# if __name__ == "__main__":
-#     main()
-
-
-
-
 from pathlib import Path
 from typing import List
 
 import torch
+from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 # Document loading and processing
@@ -162,12 +13,16 @@ from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 
 
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
 class RAGPipeline:
     def __init__(
         self,
         data_folder: str,
         embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
         generation_model: str = "microsoft/Phi-4-mini-instruct",
+        adapter_model: str = "models/phi-4-mini-dsa-adapter",
     ):
         """
         Initialize RAG pipeline.
@@ -176,12 +31,19 @@ class RAGPipeline:
             data_folder: Path to folder containing PDFs
             embedding_model: HuggingFace model for embeddings
             generation_model: HuggingFace instruction model used to answer questions
+            adapter_model: Path to the fine-tuned LoRA adapter
             vector_store: holds the FAISS vector database instance after creation or loading
             self.documents: holds the list of Document objects after loading and chunking
         """
         self.data_folder = Path(data_folder)
         self.embedding_model = embedding_model
         self.generation_model = generation_model
+        adapter_path = Path(adapter_model)
+        self.adapter_model = (
+            adapter_path
+            if adapter_path.is_absolute()
+            else PROJECT_ROOT / adapter_path
+        )
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
         self.tokenizer = None
         self.generator = None
@@ -282,18 +144,51 @@ class RAGPipeline:
         self.generator = AutoModelForCausalLM.from_pretrained(
             self.generation_model,
             device_map="auto",
-            torch_dtype="auto",
+            dtype="auto",
             attn_implementation="eager",
         )
+        if self.adapter_model.exists():
+            print(f"Loading fine-tuned adapter {self.adapter_model}...")
+            self.generator = PeftModel.from_pretrained(
+                self.generator,
+                str(self.adapter_model),
+            )
+        else:
+            print(
+                f"Fine-tuned adapter not found at {self.adapter_model}. "
+                "Using the base generation model."
+            )
         self.generator.eval()
+
+    @staticmethod
+    def _mode_system_prompt(mode: str) -> str:
+        """Return generation instructions for the selected answer mode."""
+        shared = (
+            "You are a DSA tutor. Answer the student's question using only the "
+            "provided retrieved context. If the context does not contain the answer, "
+            "say that you do not know."
+        )
+        if mode == "raw_answer":
+            return (
+                f"{shared} Give a direct, detailed explanation. Include relevant "
+                "definitions, reasoning, steps, complexity, and practical application."
+            )
+        if mode == "summary":
+            return (
+                f"{shared} Summarize the answer as clear bullet points for a student "
+                "with coding experience who is still learning DSA. Avoid unnecessary "
+                "jargon and explain required technical terms simply."
+            )
+        raise ValueError("mode must be either 'raw_answer' or 'summary'")
 
     def generate_answer(
         self,
         query_text: str,
+        mode: str = "raw_answer",
         top_k: int = 3,
         max_new_tokens: int = 300,
     ) -> str:
-        """Retrieve relevant chunks and use Phi-4 Mini to answer the question."""
+        """Retrieve relevant chunks and use the fine-tuned Phi model to answer."""
         results = self.query(query_text, top_k=top_k)
         context = "\n\n".join(
             f"Source: {doc.metadata.get('source', 'Unknown')}\n{doc.page_content}"
@@ -303,15 +198,14 @@ class RAGPipeline:
         messages = [
             {
                 "role": "system",
-                "content": (
-                    "You are a DSA tutor. Answer the user's question using only the "
-                    "provided context. If the context does not contain the answer, "
-                    "say that you do not know. Cite source filenames when useful."
-                ),
+                "content": self._mode_system_prompt(mode),
             },
             {
                 "role": "user",
-                "content": f"Context:\n{context}\n\nQuestion: {query_text}",
+                "content": (
+                    f"Retrieved context:\n{context}\n\n"
+                    f"Student question: {query_text}"
+                ),
             },
         ]
 
@@ -377,7 +271,7 @@ def main():
     
     for query in test_queries:
         print(f"\nQuery: {query}")
-        answer = pipeline.generate_answer(query, top_k=3)
+        answer = pipeline.generate_answer(query, mode="summary", top_k=3)
         print(f"Answer: {answer}")
 
 
