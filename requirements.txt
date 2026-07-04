@@ -10,6 +10,8 @@ langchain_text_splitters
 transformers>=4.49,<5
 torch
 accelerate
+peft==0.17.0
+bitsandbytes
 faiss-cpu
 unstructured
 unstructured[pdf]
@@ -18,3 +20,5 @@ pdfplumber
 sentence-transformers>=2.7.0
 numpy>=1.26.4,<2
 elevenlabs
+fastapi
+uvicorn[standard]

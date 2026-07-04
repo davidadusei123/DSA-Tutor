@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DSA Tutor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">RAG-powered study agent</p>
+        <h1>Ask the DSA tutor without getting buried in jargon.</h1>
+        <p class="subtitle">
+          Retrieve context from your course documents, then answer with your
+          fine-tuned Phi-4 Mini adapter.
+        </p>
+      </section>
+
+      <section class="workspace" aria-label="Ask the tutor">
+        <form id="ask-form" class="ask-card">
+          <label for="query">What are you studying?</label>
+          <textarea
+            id="query"
+            name="query"
+            rows="7"
+            placeholder="Example: When should I use dynamic programming instead of greedy?"
+            required
+          ></textarea>
+
+          <div class="controls">
+            <div class="field">
+              <label for="mode">Answer mode</label>
+              <select id="mode" name="mode">
+                <option value="summary" selected>Summary</option>
+                <option value="raw_answer">Raw answer</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="top-k">Sources</label>
+              <select id="top-k" name="top-k">
+                <option value="2">2 chunks</option>
+                <option value="3" selected>3 chunks</option>
+                <option value="5">5 chunks</option>
+              </select>
+            </div>
+
+            <button id="submit-button" type="submit">Ask tutor</button>
+          </div>
+        </form>
+
+        <section class="answer-card" aria-live="polite">
+          <div class="answer-header">
+            <div>
+              <p class="eyebrow">Response</p>
+              <h2 id="answer-title">Ready when you are.</h2>
+            </div>
+            <span id="status-pill" class="pill">Idle</span>
+          </div>
+
+          <div id="answer" class="answer empty">
+            Choose a mode, ask a question, and the tutor will use the retrieved
+            course context to answer.
+          </div>
+
+          <div class="sources-wrap">
+            <h3>Retrieved Sources</h3>
+            <div id="sources" class="sources empty">No sources yet.</div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
