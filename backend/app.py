@@ -23,6 +23,7 @@ class AskRequest(BaseModel):
     mode: Literal["raw_answer", "summary"] = "summary"
     top_k: int = Field(default=3, ge=1, le=8)
     max_new_tokens: int = Field(default=300, ge=64, le=800)
+    similarity_threshold: float = Field(default=0.50, ge=0.0, le=1.0)
 
 
 class SourceChunk(BaseModel):
@@ -96,12 +97,16 @@ def health() -> dict[str, object]:
 def ask(request: AskRequest) -> AskResponse:
     try:
         pipeline = get_pipeline()
-        results = pipeline.query(request.query, top_k=request.top_k)
+        results = pipeline.query_with_cosine_similarity(
+            request.query,
+            top_k=request.top_k,
+        )
         answer = pipeline.generate_answer(
             request.query,
             mode=request.mode,
             top_k=request.top_k,
             max_new_tokens=request.max_new_tokens,
+            similarity_threshold=request.similarity_threshold,
         )
         return AskResponse(
             answer=answer,

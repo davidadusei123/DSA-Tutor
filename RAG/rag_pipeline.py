@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import List
+import math
 
 import torch
 from peft import PeftModel
@@ -14,6 +15,7 @@ from langchain_core.documents import Document
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_SIMILARITY_THRESHOLD = 0.5
 
 
 class RAGPipeline:
@@ -134,6 +136,49 @@ class RAGPipeline:
         results = self.vector_store.similarity_search_with_score(query_text, k=top_k)
         return results
 
+    @staticmethod
+    def _cosine_similarity(first: list[float], second: list[float]) -> float:
+        """Calculate cosine similarity between two embedding vectors."""
+        dot_product = sum(a * b for a, b in zip(first, second))
+        first_norm = math.sqrt(sum(a * a for a in first))
+        second_norm = math.sqrt(sum(b * b for b in second))
+        if first_norm == 0 or second_norm == 0:
+            return 0.0
+        return dot_product / (first_norm * second_norm)
+
+    def query_with_cosine_similarity(
+        self,
+        query_text: str,
+        top_k: int = 3,
+    ) -> List[tuple[Document, float]]:
+        """
+        Retrieve documents and score them with true cosine similarity.
+
+        FAISS may return L2 distances depending on how the index was built, so this
+        method recomputes cosine similarity for the retrieved candidates. This keeps
+        the relevance threshold easy to reason about: higher is better, from -1 to 1.
+        """
+        results = self.query(query_text, top_k=top_k)
+        query_embedding = self.embeddings.embed_query(query_text)
+        document_embeddings = self.embeddings.embed_documents(
+            [document.page_content for document, _ in results]
+        )
+        scored_results = []
+
+        for (document, _), document_embedding in zip(results, document_embeddings):
+            similarity = self._cosine_similarity(query_embedding, document_embedding)
+            scored_results.append((document, similarity))
+
+        return sorted(scored_results, key=lambda item: item[1], reverse=True)
+
+    @staticmethod
+    def _insufficient_context_answer(best_similarity: float, threshold: float) -> str:
+        return (
+            "I don't have enough relevant information in the DSA knowledge base to "
+            "answer that confidently. The question may be off-topic from DSA, "
+            "or the needed material may not be in the indexed documents."
+        )
+
     def _load_generator(self) -> None:
         """Load the generation model only when an answer is requested."""
         if self.generator is not None:
@@ -164,9 +209,14 @@ class RAGPipeline:
     def _mode_system_prompt(mode: str) -> str:
         """Return generation instructions for the selected answer mode."""
         shared = (
-            "You are a DSA tutor. Answer the student's question using only the "
-            "provided retrieved context. If the context does not contain the answer, "
-            "say that you do not know."
+            """You are a Data Structures and Algorithms tutor. Answer the student's question using only the 
+            provided retrieved context. If the context does not contain the answer, 
+            say that you do not know.
+            
+            Rules:
+            1. Use the retrieved context to answer the question.
+            2. If the context does not contain the answer, say "I don't know" and do not make up an answer.
+            """
         )
         if mode == "raw_answer":
             return (
@@ -187,12 +237,20 @@ class RAGPipeline:
         mode: str = "raw_answer",
         top_k: int = 3,
         max_new_tokens: int = 300,
+        similarity_threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
     ) -> str:
         """Retrieve relevant chunks and use the fine-tuned Phi model to answer."""
-        results = self.query(query_text, top_k=top_k)
+        results = self.query_with_cosine_similarity(query_text, top_k=top_k)
+        best_similarity = results[0][1] if results else 0.0
+        if best_similarity < similarity_threshold:
+            return self._insufficient_context_answer(
+                best_similarity,
+                similarity_threshold,
+            )
+
         context = "\n\n".join(
             f"Source: {doc.metadata.get('source', 'Unknown')}\n{doc.page_content}"
-            for doc, _ in results
+            for doc, _similarity in results
         )
 
         messages = [
@@ -236,7 +294,8 @@ class RAGPipeline:
         print(f"Loading vector database from {vector_db_path}...")
         self.vector_store = FAISS.load_local(
             vector_db_path,
-            self.embeddings
+            self.embeddings,
+            allow_dangerous_deserialization=True,
         )
         print("Vector database loaded successfully")
         return self.vector_store
@@ -250,13 +309,16 @@ def main():
     pipeline = RAGPipeline(data_folder)
     
     # Step 1: Load PDFs
-    pipeline.load_pdfs()
+    # pipeline.load_pdfs()
     
     # Step 2: Chunk documents
-    pipeline.chunk_documents(chunk_size=500, chunk_overlap=50)
+    # pipeline.chunk_documents(chunk_size=500, chunk_overlap=50)
     
     # Step 3: Create embeddings and store in vector database
-    pipeline.create_embeddings_and_store("vector_db")
+    #pipeline.create_embeddings_and_store("vector_db")
+
+    # Step 3 (alternative): Load existing vector database
+    pipeline.load_existing_vectordb("vector_db")
     
     # Step 4: Retrieve context and generate answers with Phi-4 Mini
     print("\n" + "="*60)
@@ -264,9 +326,7 @@ def main():
     print("="*60)
     
     test_queries = [
-        "What is dynamic programming?",
-        "Explain binary search trees",
-        "How does sorting work?"
+        "What is better: apples or oranges?"
     ]
     
     for query in test_queries:

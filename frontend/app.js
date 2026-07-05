@@ -37,9 +37,10 @@ function renderSources(sources) {
   sourcesBox.innerHTML = sources
     .map((source, index) => {
       const page = source.page === null ? "" : `, page ${source.page + 1}`;
+      const score = Number(source.score).toFixed(2);
       return `
         <article class="source">
-          <strong>${index + 1}. ${escapeHtml(source.source)}${page}</strong>
+          <strong>${index + 1}. ${escapeHtml(source.source)}${page} · cosine ${score}</strong>
           <p>${escapeHtml(source.preview)}...</p>
         </article>
       `;
@@ -75,6 +76,7 @@ form.addEventListener("submit", async (event) => {
         query,
         mode: modeInput.value,
         top_k: Number(topKInput.value),
+        similarity_threshold: 0.5,
         max_new_tokens: modeInput.value === "summary" ? 280 : 520,
       }),
     });
