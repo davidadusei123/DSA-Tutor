@@ -1,7 +1,9 @@
 from pathlib import Path
 from typing import List
 import math
+import os
 
+import requests
 import torch
 from peft import PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer
@@ -47,6 +49,8 @@ class RAGPipeline:
             else PROJECT_ROOT / adapter_path
         )
         self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
+        self.hf_endpoint_url = os.getenv("HF_ENDPOINT_URL")
+        self.hf_token = os.getenv("HF_TOKEN")
         self.tokenizer = None
         self.generator = None
         self.vector_store = None
@@ -231,6 +235,83 @@ class RAGPipeline:
             )
         raise ValueError("mode must be either 'raw_answer' or 'summary'")
 
+    @staticmethod
+    def _format_hosted_prompt(messages: list[dict[str, str]]) -> str:
+        """Format chat messages for a hosted text-generation endpoint."""
+        formatted_messages = []
+        for message in messages:
+            role = message["role"].strip()
+            content = message["content"].strip()
+            formatted_messages.append(f"<|{role}|>\n{content}")
+        formatted_messages.append("<|assistant|>\n")
+        return "\n".join(formatted_messages)
+
+    @staticmethod
+    def _extract_hosted_text(payload: object) -> str:
+        """Handle common Hugging Face endpoint response shapes."""
+        if isinstance(payload, list) and payload:
+            first_item = payload[0]
+            if isinstance(first_item, dict):
+                return str(
+                    first_item.get("generated_text")
+                    or first_item.get("summary_text")
+                    or first_item.get("text")
+                    or first_item
+                )
+            return str(first_item)
+
+        if isinstance(payload, dict):
+            if "generated_text" in payload:
+                return str(payload["generated_text"])
+            if "choices" in payload and payload["choices"]:
+                choice = payload["choices"][0]
+                if isinstance(choice, dict):
+                    message = choice.get("message", {})
+                    if isinstance(message, dict) and "content" in message:
+                        return str(message["content"])
+                    if "text" in choice:
+                        return str(choice["text"])
+            if "error" in payload:
+                raise RuntimeError(f"Hugging Face endpoint error: {payload['error']}")
+
+        return str(payload)
+
+    def _call_hosted_generator(
+        self,
+        messages: list[dict[str, str]],
+        max_new_tokens: int,
+    ) -> str:
+        """Call a hosted Hugging Face endpoint instead of loading Phi locally."""
+        if not self.hf_endpoint_url:
+            raise RuntimeError("HF_ENDPOINT_URL environment variable is not set.")
+        if not self.hf_token:
+            raise RuntimeError("HF_TOKEN environment variable is not set.")
+
+        prompt = self._format_hosted_prompt(messages)
+        response = requests.post(
+            self.hf_endpoint_url,
+            headers={
+                "Authorization": f"Bearer {self.hf_token}",
+                "Content-Type": "application/json",
+            },
+            json={
+                "inputs": prompt,
+                "parameters": {
+                    "max_new_tokens": max_new_tokens,
+                    "do_sample": False,
+                    "return_full_text": False,
+                },
+            },
+            timeout=180,
+        )
+        response.raise_for_status()
+        generated_text = self._extract_hosted_text(response.json()).strip()
+
+        # Some endpoints ignore return_full_text and include the prompt.
+        if generated_text.startswith(prompt):
+            generated_text = generated_text[len(prompt):].strip()
+        return generated_text
+
     def generate_answer(
         self,
         query_text: str,
@@ -266,6 +347,9 @@ class RAGPipeline:
                 ),
             },
         ]
+
+        if self.hf_endpoint_url:
+            return self._call_hosted_generator(messages, max_new_tokens)
 
         self._load_generator()
         inputs = self.tokenizer.apply_chat_template(
